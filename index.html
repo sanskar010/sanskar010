@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Forever - Zuvi</title>
+    <style>
+        :root {
+            --primary-color: #ff4d6d;
+            --secondary-color: #ffb3c1;
+            --bg-color: #fff0f3;
+            --text-color: #590d22;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Background floating hearts animation */
+        .hearts-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: var(--primary-color);
+            opacity: 0.6;
+            animation: float Up 6s linear infinite;
+            bottom: -50px;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-105vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+            background: rgba(255, 240, 243, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(89, 13, 34, 0.05);
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        nav a.active, nav a:hover {
+            color: var(--primary-color);
+        }
+
+        nav a.active::after {
+            content: '❤️';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+        }
+
+        /* Main Container for multi-pages */
+        .page-container {
+            margin-top: 80px;
+            padding: 20px;
+            z-index: 10;
+            position: relative;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Page 1: Home/Love Letter Styles */
+        .hero-section {
+            text-align: center;
+            padding: 40px 10px;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .hero-image-wrapper {
+            width: 300px;
+            height: 300px;
+            margin: 30px auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 8px solid white;
+            box-shadow: 0 8px 24px rgba(89, 13, 34, 0.15);
+        }
+
+        .hero-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .love-letter {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(89, 13, 34, 0.05);
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        /* Music Player Styling */
+        .music-card {
+            background: linear-gradient(135deg, var(--primary-color), #ff758f);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            max-width: 400px;
+            margin: 30px auto;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.3);
+        }
+
+        .music-card h3 { margin-bottom: 5px; }
+        .music-card p { font-size: 0.9rem; opacity: 0.9; margin-bottom: 15px;}
+        
+        .player-controls button {
+            background: white;
+            border: none;
+            color: var(--primary-color);
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .player-controls button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Page 2: Gallery Styles */
+        .gallery-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+
+        .grid-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .gallery-item {
+            background: white;
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px) rotate(2deg);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .gallery-caption {
+            text-align: center;
+            margin-top: 10px;
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        /* Interaction Banner */
+        .interactive-btn {
+            display: block;
+            margin: 40px auto;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+            transition: background 0.3s;
+        }
+        .interactive-btn:hover {
+            background-color: #e03a59;
+        }
+
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 450px;
+            position: relative;
+            animation: popUp 0.3s ease;
+        }
+        @keyframes popUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px; right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Background Hearts -->
+    <div class="hearts-bg" id="heartsBg"></div>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <a id="nav-home" class="active" onclick="switchPage('home')">Our Love</a>
+        <a id="nav-gallery" onclick="switchPage('gallery')">Our Memories</a>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="page-container">
+
+        <!-- PAGE 1: HOME & LOVE LETTER -->
+        <div id="page-home" class="page active">
+            <div class="hero-section">
+                <h1>To My Beautiful Zuvi</h1>
+                <p>You make every single day feel magical ✨</p>
+                
+                <div class="hero-image-wrapper">
+                    <!-- Main Feature Photo -->
+                    <img src="C:\Users\lenovo\OneDrive\Desktop\zuvi\WhatsApp Image 2026-06-04 at 18.16.52.jpeg" alt="You and Zuvi">
+                </div>
+            </div>
+
+            <div class="love-letter">
+                <p>❤️</p>
+                <p>From the moment you walked into my life, everything changed. Your smile brightens my darkest days, and your laughter is my absolute favorite sound in the world. This website is just a tiny token of my endless love for you.</p>
+                <br>
+                <p>No matter where life takes us, my heart will always belong to you. Thank you for being my best friend, my comfort, and my forever love.</p>
+            </div>
+
+            <!-- Music Card -->
+            <div class="music-card">
+                <h3>🎵 Our Song</h3>
+                <p><strong>I Guess I'm in Love</strong> - Clinton Kane</p>
+                <div class="player-controls">
+                    <!-- Configured ready for your local mp3 file or audio streaming hook -->
+                    <button onclick="toggleMusic()" id="playBtn">▶ Play Song</button>
+                    <audio id="bgMusic" loop>
+                        <source src="C:\Users\lenovo\OneDrive\Desktop\zuvi\our-song.mp3.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+            </div>
+
+            <button class="interactive-btn" onclick="showLoveMessage()">Click For A Surprise 💌</button>
+        </div>
+
+
+        <!-- PAGE 2: GALLERY -->
+        <div id="page-gallery" class="page">
+            <h2 class="gallery-title">Moments Captured In Time 📸</h2>
+            
+            <div class="grid-gallery">
+                <div class="gallery-item">
+                    <img src="C:\Users\lenovo\OneDrive\Desktop\zuvi\WhatsApp Image 2026-06-04 at 18.16.52.jpeg" alt="Memory 1">
+                    <div class="gallery-caption">Pure Happiness With You</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="C:\Users\lenovo\OneDrive\Desktop\zuvi\2.jpeg" alt="Memory 2">
+                    <div class="gallery-caption">Those late night glances...</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="C:\Users\lenovo\OneDrive\Desktop\zuvi\3.jpeg" alt="Memory 3">
+                    <div class="gallery-caption">Never a boring moment! 🤪</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="C:\Users\lenovo\OneDrive\Desktop\zuvi\4.jpeg" alt="Memory 4">
+                    <div class="gallery-caption">My prettiest date ever</div>
+                </div>
+		<div class="gallery-item">
+                    <img src="C:\Users\lenovo\OneDrive\Desktop\zuvi\5.jpeg" alt="Memory 5">
+                    <div class="gallery-caption">Our random beauty plans</div>
+                </div>
+		<div class="gallery-item">
+                    <img src="C:\Users\lenovo\OneDrive\Desktop\zuvi\6.jpeg" alt="Memory 6">
+                    <div class="gallery-caption">Our own  world</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Interaction Modal Pop-up -->
+    <div class="modal" id="loveModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>I Love You Endless Amounts! 🥰</h2>
+            <p style="margin-top: 15px; line-height: 1.6;">You are my today, my tomorrow, and the rest of my life. Thank you for being you, Zuvi!</p>
+        </div>
+    </div>
+
+    <script>
+        // Page Switching Logic (SPA Behavior)
+        function switchPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            // Remove active nav styling
+            document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
+
+            // Show selected page & apply nav highlight
+            document.getElementById(`page-${pageId}`).classList.add('active');
+            document.getElementById(`nav-${pageId}`).classList.add('active');
+            
+            // Scroll back up gently
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // Interactive Popup Function
+        function showLoveMessage() {
+            document.getElementById('loveModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('loveModal').style.display = 'none';
+        }
+
+        // Audio Player Toggle 
+        function toggleMusic() {
+            const audio = document.getElementById('bgMusic');
+            const btn = document.getElementById('playBtn');
+            
+            if (audio.paused) {
+                // To fully enable music, place an audio file named "our-song.mp3" in the folder.
+                audio.play().then(() => {
+                    btn.innerText = "⏸ Pause Song";
+                }).catch(err => {
+                    // Fallback visual click feedback if file is missing initially
+                    alert("Playing Clinton Kane - I Guess I'm In Love 🎶 (Make sure to place your 'our-song.mp3' file in the directory to hear it!)");
+                    btn.innerText = "🎵 Playing...";
+                });
+            } else {
+                audio.pause();
+                btn.innerText = "▶ Play Song";
+            }
+        }
+
+        // Dynamic Background Heart Spawner
+        function createHeart() {
+            const container = document.getElementById('heartsBg');
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            
+            // Randomize position and sizes for natural variation
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 4 + 's'; // 4-7s float time
+            heart.style.fontSize = Math.random() * 15 + 15 + 'px';
+            
+            container.appendChild(heart);
+            
+            // Clean up elements after animation ends
+            setTimeout(() => {
+                heart.remove();
+            }, 7000);
+        }
+
+        // Keep spawning hearts constantly
+        setInterval(createHeart, 400);
+    </script>
+</body>
+</html>
